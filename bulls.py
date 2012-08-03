@@ -67,13 +67,13 @@ class BullsCowsGame:
 
 
 if __name__=="__main__":
-    b = BullsCowsGames()
+    b = BullsCowsGame()
     while True:
         b.prompt()
         ans = sys.stdin.readline().strip()
         if ans == None or ans == "":
             sys.exit(0)
-        res = b.checkAnswer(ans):
+        res = b.checkAnswer(ans)
         if res == True:
             print "Correct!"
             sys.exit(0)
