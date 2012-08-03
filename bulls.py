@@ -45,6 +45,12 @@ class BullsCowsGame:
     (0, 0)
     >>> b.checkAnswer("1111")
     (1, 0)
+    >>> b.checkAnswer("1")
+    Invalid input!
+    (0, 0)
+    >>> b.checkAnswer("11234")
+    Invalid input!
+    (0, 0)
     >>> b.handleGuess("1234")
     Correct!
     True
@@ -84,6 +90,9 @@ class BullsCowsGame:
         @param b User's guess
         @return Tuple containing bulls and cows
         """
+        if len(a)!=len(b):
+            print "Invalid input!"
+            return (0,0)
         bulls = sum(map(lambda x,y: 1 if (x==y) else 0, a,b))
         cows = sum(map(lambda x,y: 1 if x!=y and x in b else 0, a,b))
         return (bulls, cows)
