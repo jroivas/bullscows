@@ -84,6 +84,7 @@ class BullsCowsGame:
         """
         self._randomizer = randomizer
         self._number = self._randomizer.getNumber()
+        self._useAlternative = useAlternative
 
     def bullCow(self, a, b):
         """ Return number of bulls and cows.
@@ -121,7 +122,10 @@ class BullsCowsGame:
         """
         if self._number == guess: return True
 
-        (bulls, cows) = self.bullCow(self._number, guess)
+        if self._useAlternative:
+            (bulls, cows) = self.bullCowAlternative(self._number, guess)
+        else:
+            (bulls, cows) = self.bullCow(self._number, guess)
         if bulls==len(self._number): return True
         return (bulls, cows)
 
