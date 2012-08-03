@@ -2,10 +2,10 @@ import random
 import sys
 
 class MyRandomizer:
-    def __init__(self):
+    def __init__(self, number = None):
         """ Initialize randomize
         """
-        self._number = None
+        self._number = number
 
     def setNumber(self, number):
         """ Override the random feature and set the number
@@ -29,6 +29,46 @@ class MyRandomizer:
 
 
 class BullsCowsGame:
+    """ Bulls and Cows game
+        https://en.wikipedia.org/wiki/Bulls_and_cows
+
+    >>> b = BullsCowsGame(randomizer=MyRandomizer("1234"))
+    >>> b.checkAnswer("1234")
+    True
+    >>> b.checkAnswer("1235")
+    (3, 0)
+    >>> b.checkAnswer("1203")
+    (2, 1)
+    >>> b.checkAnswer("0023")
+    (0, 2)
+    >>> b.checkAnswer("0000")
+    (0, 0)
+    >>> b.checkAnswer("1111")
+    (1, 0)
+    >>> b.handleGuess("1234")
+    Correct!
+    True
+    >>> b.handleGuess("1233")
+    Bulls: 3, Cows: 0
+    False
+    >>> b.checkAnswer("9999")
+    (0, 0)
+    >>> b = BullsCowsGame(randomizer=MyRandomizer("9999"))
+    >>> b.checkAnswer("9999")
+    True
+    >>> b.prompt()
+    Your guess:
+    >>> b.bullCow("7890","1234")
+    (0, 0)
+    >>> b.bullCow("7890","0914")
+    (0, 2)
+    >>> b.bullCow("7890","9876")
+    (1, 2)
+    >>> b.bullCow("7890","0987")
+    (0, 4)
+    >>> b.bullCow("7890","0890")
+    (3, 0)
+    """
     def __init__(self, randomizer=MyRandomizer()):
         """ Initialize the game and get the number to guess.
 
@@ -39,7 +79,6 @@ class BullsCowsGame:
 
     def bullCow(self, a, b):
         """ Return number of bulls and cows.
-        https://en.wikipedia.org/wiki/Bulls_and_cows
         
         @param a Correct answer
         @param b User's guess
@@ -53,18 +92,31 @@ class BullsCowsGame:
         """ Checks whether the answer is correct.
 
         @param guess User's guess
-        @return True if right, otherwise a hint message
+        @return True if right, otherwise bulls and cows count
         """
         if self._number == guess: return True
 
         (bulls, cows) = self.bullCow(self._number, guess)
         if bulls==len(self._number): return True
-
-        return "Bulls: %s, Cows: %s"%(bulls,cows)
+        return (bulls, cows)
 
     def prompt(self):
+        """ Prompt user
+        """
         print "Your guess:"
 
+    def handleGuess(self, guess):
+        """ Handle a user guess
+
+        @param guess User's guess
+        @return True if correct, False otherwise
+        """
+        res = self.checkAnswer(guess)
+        if res == True:
+            print "Correct!"
+            return True
+        print "Bulls: %s, Cows: %s"%res
+        return False
 
 if __name__=="__main__":
     b = BullsCowsGame()
@@ -73,8 +125,5 @@ if __name__=="__main__":
         ans = sys.stdin.readline().strip()
         if ans == None or ans == "":
             sys.exit(0)
-        res = b.checkAnswer(ans)
-        if res == True:
-            print "Correct!"
+        if b.handleGuess(ans):
             sys.exit(0)
-        print res
